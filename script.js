@@ -2,6 +2,7 @@ const itemForm = document.getElementById("item-form")
 const itemInput = document.getElementById("item-input")
 const itemList = document.getElementById("item-list")
 const clearBtn = document.getElementById('clear')
+const itemFilter = document.getElementById('filter')
 
 const addItem = (e) => {
     e.preventDefault();
@@ -21,7 +22,10 @@ const addItem = (e) => {
     // Create button
     const button = createButton("remove-item btn-link text-red")
     li.appendChild(button)
+
+    // Adding item to ul
     itemList.appendChild(li)
+    clearUI()
     itemInput.value = '';
 }
 
@@ -41,7 +45,11 @@ const createIcon = (classes) => {
 
 const removeItem = (e) => {
     if(e.target.parentElement.classList.contains("remove-item")){
-        e.target.parentElement.parentElement.remove()
+
+        if(window.confirm('Are you sure?')){
+            e.target.parentElement.parentElement.remove()
+            clearUI()
+        }
     };
 }
 
@@ -49,9 +57,24 @@ const clearItems = () => {
     while(itemList.firstChild){
         itemList.removeChild(itemList.firstChild)
     }
+    clearUI()
+}
+
+const clearUI = () => {
+    const items = itemList.querySelectorAll("li")
+    if(items.length === 0){
+        clearBtn.style.display = 'none'
+        itemFilter.style.display = 'none'
+    }
+    else{
+        clearBtn.style.display = 'block'
+        itemFilter.style.display = 'block'
+    }
 }
 
 //Event Listeners 
 itemForm.addEventListener('submit', addItem)
 itemList.addEventListener('click', removeItem)
 clearBtn.addEventListener('click', clearItems)
+
+clearUI()
